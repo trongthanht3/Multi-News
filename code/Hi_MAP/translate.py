@@ -17,6 +17,7 @@ import onmt.opts
 
 def main(opt):
     translator = build_translator(opt, report_score=True)
+    print("this have to work")
     translator.translate(src_path=opt.src,
                          tgt_path=opt.tgt,
                          src_dir=opt.src_dir,

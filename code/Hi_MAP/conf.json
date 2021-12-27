@@ -1,0 +1,15 @@
+{
+    "models_root": "Hi_MAP/model_newser_atten",
+    "models": [
+        {
+            "id": 100,
+            "model": "Feb17__step_20000.pt",
+            "timeout": 600,
+            "on_timeout": "to_cpu",
+            "load": true,
+            "opt": {
+
+            }
+        }
+    ]
+}

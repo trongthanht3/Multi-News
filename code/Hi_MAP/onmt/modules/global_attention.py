@@ -201,7 +201,10 @@ class GlobalAttention(nn.Module):
             #????
             mask = sequence_mask(memory_lengths, max_len=align.size(-1))
             mask = mask.unsqueeze(1)  # Make it broadcastable.
-            align.masked_fill_(1 - mask, -float('inf'))
+
+            # fix for tensor version > 1.2
+            # refer to https://github.com/OpenNMT/OpenNMT-py/pull/1527/commits/234f9a5f6fca989fe6804e44ea68b58786ed58b8
+            align.masked_fill_(~mask, -float('inf'))
 
         # Softmax or sparsemax to normalize attention weights
         if self.attn_func == "softmax":

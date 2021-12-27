@@ -131,7 +131,7 @@ class Translation(object):
         self.gold_sent = tgt_sent
         self.gold_score = gold_score
 
-    def log(self, sent_number):
+    def log(self, sent_number, output_temp):
         """
         Log translation.
         """
@@ -142,6 +142,10 @@ class Translation(object):
         best_score = self.pred_scores[0]
         pred_sent = ' '.join(best_pred)
         output += 'PRED {}: {}\n'.format(sent_number, pred_sent)
+        # write to file
+        f = open(output_temp, "w", encoding='utf-8')
+        f.write(pred_sent)
+        f.close()
         output += "PRED SCORE: {:.4f}\n".format(best_score)
 
         if self.gold_sent is not None:

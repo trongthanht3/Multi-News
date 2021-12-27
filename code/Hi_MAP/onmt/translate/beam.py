@@ -130,7 +130,9 @@ class Beam(object):
 
         # best_scores_id is flattened beam x word array, so calculate which
         # word and beam each score came from
-        prev_k = best_scores_id / num_words
+
+        #Integer division of tensors using div or / is no longer supported, and in a future release div will perform true division as in Python 3. Use true_divide or floor_divide (// in Python) instead.
+        prev_k = best_scores_id // num_words
         self.prev_ks.append(prev_k)
         self.prev_ks_cpu.append(prev_k.tolist())
 

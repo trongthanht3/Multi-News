@@ -158,7 +158,8 @@ class Translator(object):
                   tgt_data_iter=None,
                   src_dir=None,
                   batch_size=None,
-                  attn_debug=False):
+                  attn_debug=False,
+                  output_temp=None):
         """
         Translate content of `src_data_iter` (if not None) or `src_path`
         and get gold scores if one of `tgt_data_iter` or `tgt_path` is set.
@@ -184,6 +185,11 @@ class Translator(object):
             * all_predictions is a list of `batch_size` lists
                 of `n_best` predictions
         """
+        # os.write(1, "src_path: {}\n".format(src_path).encode('utf-8'))
+        # os.write(1, "src_data_iter:{}\n".format(src_data_iter).encode('utf-8'))
+        # os.write(1, "tgt_path:{}\n".format(tgt_path).encode('utf-8'))
+        # os.write(1, "tgt_data_iter: {}\n".format(tgt_data_iter).encode('utf-8'))
+        # os.write(1, "src_dir: {}\n".format(src_dir).encode('utf-8'))
 
         assert src_data_iter is not None or src_path is not None
 
@@ -238,6 +244,7 @@ class Translator(object):
 
 
             for trans in translations:
+                # print("this run eveevevveveeeeeeeeeeeeeeeeeeee")
                 all_scores += [trans.pred_scores[:self.n_best]]
                 pred_score_total += trans.pred_scores[0]
                 pred_words_total += len(trans.pred_sents[0])
@@ -249,14 +256,15 @@ class Translator(object):
                                 for pred in trans.pred_sents[:self.n_best]]
                 all_predictions += [n_best_preds]
                 self.out_file.write('\n'.join(n_best_preds) + '\n')
-                self.out_file.flush()
+                # self.out_file.flush()             #this line clear my console
 
                 if self.verbose:
                     sent_number = next(counter)
-                    output = trans.log(sent_number)
+                    output = trans.log(sent_number, output_temp)
                     if self.logger:
                         self.logger.info(output)
                     else:
+                        output = ""
                         os.write(1, output.encode('utf-8'))
 
                 # Debug attention.

@@ -121,4 +121,6 @@ if __name__ == "__main__":
     opts.train_opts(parser)
 
     opt = parser.parse_args()
+    if not torch.cuda.is_available():
+        opt.gpu_ranks = []
     main(opt)

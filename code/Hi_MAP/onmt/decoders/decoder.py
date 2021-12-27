@@ -63,6 +63,10 @@ class RNNDecoderBase(nn.Module):
                  copy_attn=False, dropout=0.0, embeddings=None,
                  reuse_copy_attn=False):
         super(RNNDecoderBase, self).__init__()
+        if not torch.cuda.is_available():
+            self.device = torch.device("cpu")
+        else:
+            self.device = torch.device("cuda")
 
         # Basic attributes.
         self.decoder_type = 'rnn'
@@ -310,7 +314,7 @@ class InputFeedRNNDecoder(RNNDecoderBase):
     """
     def _init_mmr(self,dim):
         # for sentence and summary distance.. This is defined as sim 1
-        self.mmr_W = nn.Linear(dim, dim, bias=False).cuda() # 512*512
+        self.mmr_W = nn.Linear(dim, dim, bias=False).to(self.device)# 512*512
 
     def _run_mmr(self,sent_encoder,sent_decoder,src_sents, input_step):
         '''
@@ -364,7 +368,7 @@ class InputFeedRNNDecoder(RNNDecoderBase):
 
 
             if len(mmr) < input_step: # pad with 0
-                tmp = torch.zeros(input_step - len(mmr)).float().cuda()
+                tmp = torch.zeros(input_step - len(mmr), device=self.device).float()
                 # for x in range(input_step-len(mmr)):
                 mmr = torch.cat((mmr, tmp), 0)
             else:
@@ -476,7 +480,7 @@ class InputFeedRNNDecoder(RNNDecoderBase):
                 attention_weight = output_step
                 # pairwise multiplication
                 attention_weight = torch.mul(mmr_among_words,attention_weight)
-                attns["mmr"].append(attention_weight.cuda())
+                attns["mmr"].append(attention_weight.to(self.device))
             # pdb.set_trace()
 
             attns["std"] = attns["mmr"]
