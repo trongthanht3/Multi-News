@@ -10,4 +10,3 @@ python preprocess.py -train_src ./data/train.txt.src.tokenized.fixed.cleaned.fin
                      -dynamic_dict \
                      -share_vocab \
                      -max_shard_size 10000000
-read -p "hold a min..."
