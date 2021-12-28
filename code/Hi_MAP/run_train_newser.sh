@@ -1,5 +1,5 @@
 CUDA_VISIBLE_DEVICES=0 python train.py -save_model model_newser_atten/Feb17_ \
-                -data newser_sent_500_300/newser_sents \
+                -data newser_sent_500/newser_sents \
 		        -copy_attn -accum_count 5\
 		        -global_attention mlp \
 		        -word_vec_size 128 \
